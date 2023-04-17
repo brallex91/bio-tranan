@@ -1,0 +1,167 @@
+﻿.movie-details {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #454545;
+    border-radius: 10px;
+    max-width: 500px;
+    position: relative;
+}
+
+.movie-details-content {
+    flex: 1 1 auto;
+}
+
+.movie-details-image {
+    flex: 0 0 auto;
+    position: absolute;
+    top: 220px;
+    left: 310px;
+}
+
+.movie-img {
+    max-height: 250px;
+    max-width: 200px;
+    border-radius: 10px;
+    margin-right: 20px;
+}
+
+.show-price {
+    background-color: #454545;
+    color: #FFA559;
+    font-weight: bold;
+    font-size: 32px;
+    padding: 5px 5px;
+    border-radius: 5px;
+    text-align: center;
+    position: relative;
+    top: -75px;
+    left: 0px;
+}
+
+.movie-title {
+    margin-bottom: 5px;
+    color: #FF6000;
+    font-family: Arial, sans-serif;
+    font-size: 28px;
+}
+
+.show-details-text-container {
+    background-color: #555555;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 250px;
+    max-height: 100px;
+    margin-top: 50px;
+    margin-bottom: -20px;
+    margin-left: 15px;
+}
+
+.show-details-text {
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+    .show-details-text.theater-name {
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: -5px;
+        color: #FF6000;
+    }
+
+    .show-details-text.date-time {
+        font-size: 18px;
+        margin-bottom: -5px;
+        color: #FFA559;
+    }
+
+    .show-details-text.vacancies-available {
+        margin-top: 20px;
+        color: #FFE6C7;
+    }
+
+
+.movie-details-text {
+    font-size: 16px;
+    margin-bottom: 0px;
+    color: #FFE6C7;
+    text-shadow: 1px 1px #000;
+}
+
+.movie-section {
+    margin-bottom: 10px;
+}
+
+.movie-section-title {
+    margin-bottom: 5px;
+    color: #FFA559;
+    font-size: 18px;
+}
+
+.movie-section-text {
+    margin-bottom: 5px;
+    color: #FFE6C7;
+    font-size: 14px;
+}
+
+.booking-form {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 10px;
+    background-color: #454545;
+    border-radius: 10px;
+    color: #fff;
+    padding: 20px;
+    padding-top: 10px;
+    margin-top: 20px;
+    max-width: 100px;
+    grid-column: 1/2;
+}
+
+.error-container {
+    position: absolute;
+    left: 160%;
+    top: 150%;
+    transform: translate(-100%, -50%);
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+    font-size: 20px;
+    text-shadow: .5px .5px #000;
+    white-space: nowrap;
+}
+
+.button-container {
+    text-align: center;
+    position: relative;
+    top: -19px;
+    left: 100px;
+}
+
+    .button-container button {
+        background-color: #ff6000;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        cursor: pointer;
+        font-size: 1.8rem;
+        padding: 10px 20px;
+        text-align: center;
+        width: auto;
+        height: auto;
+    }
+
+        .button-container button:hover {
+            background-color: #ff8533;
+        }
+
+        .button-container button.disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+        }

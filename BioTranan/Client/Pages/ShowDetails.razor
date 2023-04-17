@@ -1,0 +1,152 @@
+﻿@page "/show/{Id:int}"
+@inject NavigationManager NavigationManager
+@inject IMovieService MovieService
+@inject IShowService ShowService
+@inject HttpClient _http
+
+<div class="show-details">
+    @if (ShowService.Shows == null)
+    {
+        <span>Laddar visning...</span>
+    }
+    else
+    {
+        var show = ShowService.Shows.FirstOrDefault(s => s.Id == Id);
+        if (show == null)
+        {
+            <span>Kunde inte hitta visning.</span>
+        }
+        else
+        {
+            <div class="show-info">
+                @if (movie != null)
+                {
+                    <div class="movie-details">
+                        <div class="movie-details-image">
+                            <img src="@movie.ImageUrl" class="movie-img" alt="@movie.Title" />
+                        </div>
+                        <div class="movie-details-content">
+                            <h2 class="movie-title">@movie.Title</h2>
+                            <div class="movie-details-text">
+                                <p>@movie.Description</p>
+                            </div>
+                            <div class="movie-section">
+                                <h3 class="movie-section-title">Skådespelare</h3>
+                                <p class="movie-section-text">@movie.Cast</p>
+                            </div>
+                            <div class="movie-section">
+                                <h3 class="movie-section-title">Regissör</h3>
+                                <p class="movie-section-text">@movie.Director</p>
+                            </div>
+                            <div class="movie-section">
+                                <h3 class="movie-section-title">Premiär</h3>
+                                <p class="movie-section-text">@movie.PremiereYear</p>
+                            </div>
+                            <div class="show-details-text-container"><center>
+                                <p class="show-details-text theater-name">@show.Theater.Name</p>
+                                <p class="show-details-text date-time">@($"{show.Date.ToString("d MMM").ToUpper()} - {show.Time.ToString("hh\\:mm")}")</p>
+                                <p class="show-details-text vacancies-available"><span class="vacancies-available">@($"{show.AvalibleTickets} platser kvar av {show.Theater.Capacity}")</span></p>
+                                </center>
+                            </div>
+
+                            <div class="booking-form">
+                                <form method="post" onsubmit="@(() => { showId = show.Id; BookShow(customerEmail, numberOfTickets, show.Id); })">
+                                    <div class="form-group">
+                                        <input type="email" name="customerEmail" placeholder="Din e-postadress" required @bind-value="@customerEmail" autocomplete="off" />
+                                        <br>
+                                        <div class="select">
+                                            <select name="numberOfTickets" required @bind="numberOfTickets">
+                                                @for (int i = 1; i <= 10; i++)
+                                                {
+                                                    <option value="@i">@i</option>
+                                                }
+                                            </select>
+                                            <span>Välj antal biljetter</span>
+                                            <span class="focus"></span>
+                                            <span class="arrow"></span>
+                                        </div>
+                                        <br>
+                                        <input type="hidden" name="ShowId" value="@show.Id" />
+
+                                        <div class="button-container">
+                                            @if (show.AvalibleTickets < numberOfTickets)
+                                            {
+                                                <div class="error-container">
+                                                    <span class="error-message">Det finns inte tillräckligt med lediga platser!</span>
+                                                </div>
+                                                <button type="submit" class="disabled" disabled>Boka</button>
+                                            }
+                                            else
+                                            {
+                                                <button type="submit">Boka</button>
+                                            }
+                                        </div>
+
+                                        <span class="show-price">@($"{show.Price * numberOfTickets} kr")</span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private string? customerEmail;
+    private int numberOfTickets;
+    private int showId;
+
+    private Movie? movie;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await ShowService.GetShow(Id);
+
+        var show = ShowService.Shows.FirstOrDefault(s => s.Id == Id);
+        if (show != null)
+        {
+            var movieResponse = await MovieService.GetMovie(show.MovieId);
+            if (movieResponse.Success)
+            {
+                movie = movieResponse.Data;
+            }
+
+            if (show.AvalibleTickets > show.Theater.Capacity)
+            {
+                show.AvalibleTickets = show.Theater.Capacity;
+            }
+        }
+
+        else
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    private async Task BookShow(string customerEmail, int numberOfTickets, int showId)
+    {
+        var url = $"https://localhost:7242/api/Booking?customerEmail={customerEmail}&numberOfTickets={numberOfTickets}&showId={showId}";
+
+        var show = ShowService.Shows.FirstOrDefault(s => s.Id == showId);
+        if (show == null)
+        {
+            NavigationManager.NavigateTo("/");
+            return;
+        }
+
+        using var httpClient = new HttpClient();
+        var response = await httpClient.PostAsync(url, null);
+
+        var bookingJson = await response.Content.ReadAsStringAsync();
+        var booking = JsonConvert.DeserializeObject<ServiceResponse<Booking>>(bookingJson).Data;
+        var bookingId = booking.Id;
+
+        NavigationManager.NavigateTo($"/booking/{bookingId}");
+    }
+}

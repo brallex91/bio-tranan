@@ -1,0 +1,79 @@
+﻿@inject IMovieService MovieService
+@inject IShowService ShowService
+@inject NavigationManager NavigationManager
+
+@if (ShowService.Shows == null || ShowService.Shows.Count == 0)
+{
+    <center><span>Laddar Filmschema...</span></center>
+}
+else
+{
+    @foreach (var show in ShowService.Shows)
+    {
+        <div class="show-container">
+            <div class="movie-image-container">
+                <a href="@($"/show/{show.Id}")">
+                    <img src="@show.Movie.ImageUrl" alt="@show.Movie.Title" class="movie-image" />
+                </a>
+            </div>
+
+            <div class="show-info-container">
+                <div class="show-time-container">
+                    <span class="show-date">@show.Date.ToString("d MMM").ToUpper() - @show.Time.ToString("hh\\:mm")</span>
+                </div>
+
+                <div class="movie-title-container">
+                    <h4 class="movie-title">@show.Movie.Title</h4>
+                    <span class="movie-details">@show.Movie.Language | @show.Movie.Duration.ToString() min | @show.Movie.AgeLimit+ </span>
+                </div>
+
+                <div class="movie-description-container">
+                    <p class="movie-description">@show.Movie.Description</p>
+                </div>
+
+                <div class="show-details-container">
+                    <div class="movie-vacancies-container">
+                        @if (show.AvalibleTickets > 0)
+                        {
+                            <span class="vacancies-available">@($"{show.AvalibleTickets} platser kvar av {show.Theater.Capacity}")</span>
+                        }
+                        else
+                        {
+                            <span class="vacancies-full">FULLBOKAD</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@inject IShowService ShowService
+@inject IMovieService MovieService
+@inject ITheaterService TheaterService
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await ShowService.GetShows();
+        if (result != null && result.Data != null)
+        {
+            foreach (var show in result.Data)
+            {
+                var movieResult = await MovieService.GetMovie(show.MovieId);
+                var movie = movieResult.Data;
+                if (movie != null)
+                {
+                    show.Movie = movie;
+                }
+
+                var theaterResult = await TheaterService.GetTheater(show.TheaterId);
+                var theater = theaterResult.Data;
+                if (theater != null)
+                {
+                    show.Theater = theater;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,99 @@
+﻿@page "/booking/{bookingId:int}"
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+@inject IBookingService BookingService
+@inject IMovieService MovieService
+@inject IShowService ShowService
+@inject ITheaterService TheaterService
+
+@if (booking != null)
+{
+    <div class="booking-details">
+        <h2>Bokningen genomförd!</h2>
+        <h1>Bokningskod:</h1>
+        <p class="booking-code">@booking.BookingCode</p>
+        <h1>Bekräftelse skickas till:</h1>
+        <p class="customer-email">@booking.CustomerEmail</p>
+        <p>
+            <b>
+                <span class="movie-title">@movie.Title</span><br />
+                <span class="time-date">@($"{show.Date.ToString("d MMM").ToUpper()} - {show.Time.ToString("hh\\:mm")}")</span><br />
+                <span class="theater-name">@theater.Name</span>
+            </b>
+        </p>
+
+        <div class="button-container">
+            <button onclick="@(() => NavigationManager.NavigateTo("/"))">Tillbaka till Startsidan</button>
+        </div>
+    </div>
+}
+else
+{
+    <p>Loading booking details...</p>
+}
+
+@code {
+    [Parameter]
+    public int bookingId { get; set; }
+
+    public Booking booking { get; set; }
+    public Movie movie { get; set; }
+    public Show show { get; set; }
+    public Theater theater { get; set; }
+
+    private async Task<Movie> GetMovieAsync(int movieId)
+    {
+        var movieResult = await MovieService.GetMovie(movieId);
+        if (movieResult.Success)
+        {
+            return movieResult.Data;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var bookingresult = await BookingService.GetBooking(bookingId);
+        if (bookingresult.Success)
+        {
+            booking = bookingresult.Data;
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/");
+        }
+
+        var showResult = await ShowService.GetShow(booking.ShowId);
+        if (showResult.Success)
+        {
+            show = showResult.Data;
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/");
+        }
+
+        var movieResult = await MovieService.GetMovie(show.MovieId);
+        if (showResult.Success)
+        {
+            movie = movieResult.Data;
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/");
+        }
+
+        var theaterResult = await TheaterService.GetTheater(show.TheaterId);
+        if (theaterResult.Success)
+        {
+            theater = theaterResult.Data;
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+}

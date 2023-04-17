@@ -1,0 +1,76 @@
+﻿.show-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #454545;
+    border-radius: 10px;
+    max-width: 650px; 
+}
+
+.movie-image-container {
+    flex: 0 0 120px;
+    margin-right: 10px;
+    position: relative;
+}
+
+.movie-image {
+    max-height: 150px;
+    max-width: 100px;
+    border-radius: 10px;
+    margin-right: 20px;
+    transition: transform .2s;
+}
+
+    .movie-image:hover {
+        transform: scale(1.15);
+        box-shadow: 0 0 30px rgb(255, 106, 0);
+    }
+
+.show-info-container {
+    flex: 1 1 auto;
+}
+
+.show-time-container {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #FFE6C7;
+    text-shadow: 0 0 30px rgb(255, 106, 0);
+}
+
+.show-date {
+    font-style: italic;
+}
+
+.movie-title {
+    margin-bottom: 5px;
+    color: #FF6000;
+    font-family: Arial, sans-serif;
+    font-size: 20px;
+}
+
+.movie-details {
+    font-style: italic;
+    color: #FFA559;
+    margin-bottom: 5px;
+    font-size: 12px;
+}
+
+.movie-description {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    width: 30em;
+    word-wrap: break-word;
+    color: #FFE6C7;
+}
+
+.vacancies-available {
+    color: #FFA559;
+    font-weight: bold;
+}
+
+.vacancies-full {
+    color: red;
+    font-weight: bold;
+}

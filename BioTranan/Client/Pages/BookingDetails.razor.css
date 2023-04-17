@@ -1,0 +1,48 @@
+﻿.booking-details {
+    background-color: #555555;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+    .booking-details h2 {
+        color: #ff6000;
+        font-size: 36px;
+        margin-bottom: 20px;
+    }
+
+    .booking-details h1 {
+        font-size: 26px;
+        margin-bottom: 5px;
+    }
+
+    .booking-details p,
+    .booking-details b,
+    .booking-details .booking-code,
+    .booking-details .customer-email,
+    .booking-details .movie-title,
+    .booking-details .time-date,
+    .booking-details .theater-name {
+        color: #FFA559;
+    }
+
+.button-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+    .button-container button {
+        background-color: #ff6000;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        cursor: pointer;
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+
+        .button-container button:hover {
+            background-color: #ff8533;
+        }
